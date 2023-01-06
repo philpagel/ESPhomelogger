@@ -32,10 +32,10 @@ async def run(host, port, password, delim):
     await api.connect(login=True)
 
     # get all entities of the device
-    ent, serv = await api.list_entities_services()
+    ents, servs = await api.list_entities_services()
     entities = dict()
-    for i in range(len(ent)):
-        tmp = ent[i].to_dict()
+    for ent in ents:
+        tmp = ent.to_dict()
         entities[tmp["key"]] = tmp
 
     print(delim.join(["timestamp", "variable", "value"]))
