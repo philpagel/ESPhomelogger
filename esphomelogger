@@ -1,0 +1,59 @@
+#!/bin/env python3
+"""
+Connect to an ESPhome device
+and keep logging status updates to STDOUT
+"""
+
+import time
+import asyncio
+import click
+import aioesphomeapi
+
+@click.command()
+@click.option("--port", "-p", default=6053, help="API Port on ESPhome device")
+@click.option("--password", "-P", prompt="API password", help="API password on the ESPhome device")
+@click.option("--delim", "-d", default="\t", help="Field delimiter [\\t]")
+@click.argument("host")
+def main(host, port, password, delim):
+
+    loop = asyncio.get_event_loop()
+    try:
+        asyncio.ensure_future(run(host, port, password, delim))
+        loop.run_forever()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        loop.close()
+
+
+async def run(host, port, password, delim):
+    # Establish connection
+    api = aioesphomeapi.APIClient(host, port, password)
+    await api.connect(login=True)
+
+    # get all entities of the device
+    ent, serv = await api.list_entities_services()
+    entities = dict()
+    for i in range(len(ent)):
+        tmp = ent[i].to_dict()
+        entities[tmp["key"]] = tmp
+
+    print(delim.join(["timestamp", "variable", "value"]))
+
+    def log_values(state):
+        """Print the state changes of the device.."""
+
+        print(delim.join([
+            time.strftime('%Y-%m-%dT%H:%M:%S', time.localtime()), 
+            entities[state.key]['name'],
+            str(state.state),
+            ]))
+        
+    # Subscribe to the state changes
+    await api.subscribe_states(log_values)
+
+try:
+    if __name__ == "__main__":
+        main()
+except KeyboardInterrupt:
+    pass
