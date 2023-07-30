@@ -11,14 +11,15 @@ import aioesphomeapi
 
 @click.command()
 @click.option("--port", "-p", default=6053, help="API Port on ESPhome device")
-@click.option("--password", "-P", prompt="API password", help="API password on the ESPhome device")
+@click.option("--apikey", "-a", prompt="API key", help="API key")
+@click.option("--password", "-p", default=None, help="API password. THIS IS DEPRECATED. Please move to API keys.")
 @click.option("--delim", "-d", default="\t", help="Field delimiter [\\t]")
 @click.argument("host")
-def main(host, port, password, delim):
+def main(host, port, apikey, password, delim):
 
     loop = asyncio.get_event_loop()
     try:
-        asyncio.ensure_future(run(host, port, password, delim))
+        asyncio.ensure_future(run(host, port, apikey, password, delim))
         loop.run_forever()
     except KeyboardInterrupt:
         pass
@@ -26,9 +27,14 @@ def main(host, port, password, delim):
         loop.close()
 
 
-async def run(host, port, password, delim):
+async def run(host, port, apikey, password , delim):
     # Establish connection
-    api = aioesphomeapi.APIClient(host, port, password)
+    
+    if password:
+        print("Trying password authentication. THIS IS DEPRECATED! Please move to API keys.\n")
+        api = aioesphomeapi.APIClient(host, port, password)
+    else:
+        api = aioesphomeapi.APIClient(host, port, None, noise_psk=apikey)
     await api.connect(login=True)
 
     # get all entities of the device

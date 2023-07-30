@@ -44,17 +44,28 @@ Usage and available options can be shown with the `--help` option:
 
     Options:
       -p, --port INTEGER   API Port on ESPhome device
-      -P, --password TEXT  API password on the ESPhome device
+      -a, --apikey TEXT    API key
+      -p, --password TEXT  API password. THIS IS DEPRECATED. Please move to API
+                           keys.
+
       -d, --delim TEXT     Field delimiter [\t]
       --help               Show this message and exit.
 
+API passwords have been deprecated recently in Homeassistant/ESPhome.
+Please update all you ESPhome devices accordingly!
+
+If you still have a device that supports password authentication, you must give
+the password on the command line with the `-p` option *AND* provide a non-empty
+string as an API key although the latter will not be used. Please upgrade all
+your ESPhome devices to key authentication – the password option will be
+removed from this tool, soon.
 
 # Example session
 
 Here is a little example session in which I query data from a smartplug (hostname 
 `test-plug`) that has power metering functionality:
 
-    ❯ ./esphomelogger test-plug -P fooBar5ecret
+    ❯ ./esphomelogger test-plug -a a98SDf7982h318U09u341ph13498=u
     timestamp	variable	value
     2023-01-07T13:14:49	test-plug - Status	True
     2023-01-07T13:14:49	test-plug - Electric Consumption [kWh]	0.0
