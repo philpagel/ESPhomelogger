@@ -12,7 +12,7 @@ import aioesphomeapi
 @click.command()
 @click.option("--port", "-p", default=6053, help="API Port on ESPhome device")
 @click.option("--apikey", "-a", prompt="API key", help="API key")
-@click.option("--password", "-p", default=None, help="API password. THIS IS DEPRECATED. Please move to API keys.")
+@click.option("--password", "-P", default=None, help="API password. THIS IS DEPRECATED. Please move to API keys.")
 @click.option("--delim", "-d", default="\t", help="Field delimiter [\\t]")
 @click.argument("host")
 def main(host, port, apikey, password, delim):

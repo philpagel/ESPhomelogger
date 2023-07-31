@@ -45,7 +45,7 @@ Usage and available options can be shown with the `--help` option:
     Options:
       -p, --port INTEGER   API Port on ESPhome device
       -a, --apikey TEXT    API key
-      -p, --password TEXT  API password. THIS IS DEPRECATED. Please move to API
+      -P, --password TEXT  API password. THIS IS DEPRECATED. Please move to API
                            keys.
 
       -d, --delim TEXT     Field delimiter [\t]
@@ -55,7 +55,7 @@ API passwords have been deprecated recently in Homeassistant/ESPhome.
 Please update all you ESPhome devices accordingly!
 
 If you still have a device that supports password authentication, you must give
-the password on the command line with the `-p` option *AND* provide a non-empty
+the password on the command line with the `-P` option *AND* provide a non-empty
 string as an API key although the latter will not be used. Please upgrade all
 your ESPhome devices to key authentication – the password option will be
 removed from this tool, soon.
